@@ -7,16 +7,17 @@ class BookCreate(BaseModel):
     description : str
     author : str
     date_publication : date
-    disponibity : bool
+    disponibility : bool
     id_lending : int
 
 class BookOut(BaseModel):
+    id : int
     name : str
     description : str
     author : str
     date_publication : date
-    disponibity : bool
+    disponibility : bool
     id_lending : int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
