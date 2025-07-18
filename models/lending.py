@@ -7,5 +7,6 @@ class Lending(Base):
     date_entry = Column(Date)
     date_end = Column(Date)
     id_user = Column(Integer, ForeignKey("user.id"))
+    id_book = Column(Integer, ForeignKey("book.id"))
 
     

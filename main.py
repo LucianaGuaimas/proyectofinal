@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from database import Base, engine
 from routers import book, user
 
+#Base.metadata.drop_all(bind=engine)
 
 #Se crean las tablas
 Base.metadata.create_all(bind=engine)

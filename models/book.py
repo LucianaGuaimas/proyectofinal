@@ -9,4 +9,4 @@ class Book(Base):
     author = Column(String)
     date_publication = Column(Date)
     disponibility = Column(Boolean)
-    id_lending = Column(Integer, ForeignKey("lending.id"), nullable=True)
+    
