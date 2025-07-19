@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 from database import Base, engine
-from routers import book, user
+from routers import book, lending, user
 
-#Base.metadata.drop_all(bind=engine)
+Base.metadata.drop_all(bind=engine)
 
 #Se crean las tablas
 Base.metadata.create_all(bind=engine)
@@ -12,6 +12,7 @@ app = FastAPI()
 
 app.include_router(user.router)
 app.include_router(book.router)
+app.include_router(lending.router)
 
 @app.get("/")
 def read_root():
