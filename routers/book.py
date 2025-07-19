@@ -31,7 +31,7 @@ def update_book(id:int, book_update:BookUpdate, db: Session = Depends(get_db)):
     if book_update.disponibility is not None:
         book.disponibility = book_update.disponibility  #cambio el valor
     db.commit()
-    db.refresh()
+    db.refresh(book)
     return {"mensaje": "Libro actualizado correctamente"}
     
 

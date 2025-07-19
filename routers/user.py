@@ -1,10 +1,11 @@
+from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from auth.hash import hash_password, verify_password
-from schemas.user import UserCreate
+from schemas.user import UserCreate, UserOut
 from models.user import User
-from auth.jwt import  get_db
+from auth.jwt import  create_token, get_db
 
 
 router = APIRouter(prefix="/user", tags=["user"]) #defino la ruta
@@ -29,6 +30,13 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
     user = db.query(User).filter(User.email == form_data.username).first()
     if not user or not verify_password(form_data.password, user.hashed_password):
         raise credentials_exception #valido si las credenciales ingresadas son correctas
-    return {"msg": "Login exitoso"}
+    #return {"msg": "Login exitoso"}
     
+    access_token = create_token({"sub": user.email})
+    return {"access_token": access_token, "token_type": "bearer"}
+
+
+@router.get("/view", response_model = List[UserOut])
+def view_list(db: Session = Depends(get_db)):
+    return db.query(User).all()
     

@@ -1,8 +1,9 @@
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException
-from auth.jwt import get_db
+from auth.jwt import get_current_user, get_db
 from models.book import Book
 from models.lending import Lending
+from models.user import User
 from schemas.leanding import LeandingOut, LendingCreate
 from sqlalchemy.orm import Session
 
@@ -10,7 +11,7 @@ from sqlalchemy.orm import Session
 router = APIRouter(prefix="/lending", tags=["lending"])
 
 @router.post("/register", response_model = LendingCreate)
-def register_lend(lend: LendingCreate, db: Session = Depends(get_db)):
+def register_lend(lend: LendingCreate, db: Session = Depends(get_db), user: User = Depends(get_current_user)):
     book = db.query(Book).filter(Book.id == lend.id_book).first()    
     if not book:
         raise HTTPException(status_code=404, detail="El libro no existe")
@@ -18,7 +19,7 @@ def register_lend(lend: LendingCreate, db: Session = Depends(get_db)):
     if not book.disponibility:
         raise HTTPException(status_code=400, detail="El libro no está disponible")
  
-    new_lend = Lending(date_entry=lend.date_entry, date_end=lend.date_end, id_user=lend.id_user, id_book=lend.id_book)
+    new_lend = Lending(date_entry=lend.date_entry, date_end=lend.date_end, id_user=user.id, id_book=lend.id_book)
     db.add(new_lend) #agrego a la base
     book.disponibility = False
     db.commit()
