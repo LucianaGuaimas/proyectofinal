@@ -30,7 +30,7 @@ def register_lend(lend: LendingCreate, db: Session = Depends(get_db), user: User
 def view_list(db: Session = Depends(get_db)):
     return db.query(Lending).all()
 
-@router.get("/devolution/{id}")
+@router.post("/devolution/{id}")
 def devolution_lend(id: int, db: Session = Depends(get_db), user: User = Depends(get_current_user)):
     lending = db.query(Lending).filter(Lending.id == id).first() #busca el préstamo por id
  
